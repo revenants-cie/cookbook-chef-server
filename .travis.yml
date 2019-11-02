@@ -5,6 +5,3 @@ python:
 - '3.7'
 script:
 - make something
-before_install:
-- openssl aes-256-cbc -K $encrypted_ca5e7a084d08_key -iv $encrypted_ca5e7a084d08_iv
-  -in .env.tar.enc -out .env.tar -d

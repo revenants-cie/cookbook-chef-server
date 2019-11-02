@@ -19,7 +19,7 @@ help:
 .PHONY: install-hooks update-secrets
 update-secrets:  ## Update secrets in .env.tar.enc
 	tar cf .env.tar .env
-	travis encrypt-file .env.tar --add
+	travis encrypt-file .env.tar --add --com
 	rm .env.tar
 
 .PHONY: install-hooks
