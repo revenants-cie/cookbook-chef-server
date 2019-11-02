@@ -1,0 +1,34 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: true
+  # Requires kitchen >= 2.3
+  chef_license: accept
+
+platforms:
+  - name: centos-7
+
+suites:
+  - name: default
+    run_list:
+      - recipe[chef-server::default]
+    attributes:
+        chef-server:
+            accept_license: true
+            admins: ['admin1', 'admin2']
+        postfix:
+            smtp_username: 'smtp_foo'
+            smtp_password: 'smtp_bar'
+        certbot:
+            accept_license: true
+            aws_access_key_id: 'aws_foo'
+            aws_secret_access_key: 'aws_bar'
+            zones: ['foo.com', 'bar.com']
+            ssl_admin_email: 'admin@foo.bar'
+            dry_run: true

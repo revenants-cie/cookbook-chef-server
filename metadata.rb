@@ -6,6 +6,7 @@ description 'Installs/Configures chef-server'
 long_description 'Installs/Configures chef-server'
 version '0.1.0'
 chef_version '>= 13.0'
+supports 'redhat'
 
 # The `issues_url` points to the location where issues for this cookbook are
 # tracked.  A `View Issues` link will be displayed on this cookbook's page when

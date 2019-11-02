@@ -1,7 +1,15 @@
 dist: xenial
-language: python
 sudo: required
-python:
-- '3.7'
+language: ruby
+rvm:
+    - 2.6
+
+addons:
+    apt:
+        sources:
+            - chef-current-xenial
+        packages:
+            - chefdk
+
 script:
-- make something
+    - make lint

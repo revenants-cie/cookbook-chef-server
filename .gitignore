@@ -4,3 +4,5 @@
 # Secrets
 .env/
 .env.tar
+.kitchen/
+.kitchen.local.yml

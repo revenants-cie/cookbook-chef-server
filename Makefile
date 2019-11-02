@@ -29,6 +29,10 @@ install-hooks:  ## Install repo hooks
 	@test -L .git/hooks/pre-commit || ln -fs ../../hooks/pre-commit .git/hooks/pre-commit
 	@chmod +x .git/hooks/pre-commit
 
-.PHONY: something
-something: ## Run something
-	@echo "You can run some shell commands here"
+.PHONY: lint
+lint: ## Run code style checks
+	foodcritic .
+
+.PHONY: test
+test: ## Run Kitchen test on supported platforms
+	kitchen test
