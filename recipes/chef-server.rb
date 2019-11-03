@@ -36,9 +36,23 @@ execute 'create_organization' do
 end
 
 node['chef-server']['admins'].each { |admin|
+  password = SecureRandom.hex
   execute "user_create_#{admin}" do
-    command "chef-server-ctl user-create \"#{admin}\" FIRST_NAME LAST_NAME \"#{admin}@#{node['certbot']['zones'][0]}\" \"qwerty\" --filename \"/home/#{admin}/chef-#{admin}.pem\""
+    sensitive true
+    command "chef-server-ctl user-create \"#{admin}\" FIRST_NAME LAST_NAME \"#{admin}@#{node['certbot']['zones'][0]}\" \"#{password}\" --filename \"/home/#{admin}/chef-#{admin}.pem\""
     action :nothing
+  end
+  file "/home/#{admin}/chef-password.txt" do
+    sensitive true
+    content password
+    owner admin
+    mode '0600'
+    action :create_if_missing
+  end
+  file "/home/#{admin}/chef-#{admin}.pem" do
+    sensitive true
+    owner admin
+    mode '0600'
   end
 }
 
