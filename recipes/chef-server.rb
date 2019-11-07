@@ -1,3 +1,24 @@
+directory '/root/.aws' do
+    owner 'root'
+    group 'root'
+    mode '0700'
+end
+
+aws_config_file = '/root/.aws/config'
+template aws_config_file do
+    source 'aws_config.erb'
+    sensitive true
+    owner 'root'
+    group 'root'
+    mode '600'
+    variables(
+        aws_access_key_id: node['chef-server']['aws_access_key_id'],
+        aws_secret_access_key: node['chef-server']['aws_secret_access_key'],
+        aws_region: node['chef-server']['aws_region']
+    )
+end
+python_package 'awscli'
+
 remote_file "#{Chef::Config[:file_cache_path]}/chef-server-core.rpm" do
   source node['chef-server']['pkg-url']
   checksum node['chef-server']['pkg-sha256sum']
@@ -37,22 +58,25 @@ end
 
 node['chef-server']['admins'].each { |admin|
   password = SecureRandom.hex
+
   execute "user_create_#{admin}" do
     sensitive true
     command "chef-server-ctl user-create \"#{admin}\" FIRST_NAME LAST_NAME \"#{admin}@#{node['certbot']['zones'][0]}\" \"#{password}\" --filename \"/home/#{admin}/chef-#{admin}.pem\""
     action :nothing
+    notifies :run, "execute[save_chef_password_#{admin}]", :delayed
+    notifies :run, "execute[save_chef_key_#{admin}]", :delayed
   end
-  file "/home/#{admin}/chef-password.txt" do
-    sensitive true
-    content password
-    owner admin
-    mode '0600'
-    action :create_if_missing
+
+  execute "save_chef_password_#{admin}" do
+      sensitive true
+      command "/usr/local/bin/update_chef_password #{admin} #{password}"
+      action :nothing
   end
-  file "/home/#{admin}/chef-#{admin}.pem" do
-    sensitive true
-    owner admin
-    mode '0600'
+
+  execute "save_chef_key_#{admin}" do
+      sensitive true
+      command "/usr/local/bin/update_chef_user_key #{admin} /home/#{admin}/chef-#{admin}.pem"
+      action :nothing
   end
 }
 

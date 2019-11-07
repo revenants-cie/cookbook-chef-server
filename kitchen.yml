@@ -10,6 +10,8 @@ provisioner:
   always_update_cookbooks: true
   # Requires kitchen >= 2.3
   chef_license: accept
+  product_name: chef
+  product_version: 15.4.45
 
 platforms:
   - name: centos-7
@@ -22,13 +24,15 @@ suites:
         chef-server:
             accept_license: true
             admins: ['admin1', 'admin2']
+            aws_access_key_id: <%= ENV['CHEF_SERVER_AWS_ACCESS_KEY_ID'] %>
+            aws_secret_access_key: <%= ENV['CHEF_SERVER_AWS_SECRET_ACCESS_KEY'] %>
         postfix:
-            smtp_username: 'smtp_foo'
-            smtp_password: 'smtp_bar'
+            smtp_username: <%= ENV['SMTP_USERNAME'] %>
+            smtp_password: <%= ENV['SMTP_PASSWORD'] %>
         certbot:
             accept_license: true
-            aws_access_key_id: 'aws_foo'
-            aws_secret_access_key: 'aws_bar'
+            aws_access_key_id: <%= ENV['CERTBOT_AWS_ACCESS_KEY_ID'] %>
+            aws_secret_access_key: <%= ENV['CERTBOT_AWS_SECRET_ACCESS_KEY'] %>
             zones: ['foo.com', 'bar.com']
             ssl_admin_email: 'admin@foo.bar'
             dry_run: true

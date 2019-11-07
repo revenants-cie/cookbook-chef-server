@@ -19,3 +19,5 @@ issues_url 'https://github.com/revenants-cie/cookbook-chef-server/issues'
 # a Supermarket.
 #
 source_url 'https://github.com/revenants-cie/cookbook-chef-server'
+
+depends 'poise-python', '~> 1.7.0'

@@ -1,16 +1,20 @@
-package 'epel-release'
+package 'epel-release' do
+    action :upgrade
+end
+
 package 'certbot'
 package 'python2-certbot-dns-route53' do
   options '--setopt=obsoletes=0'
 end
 
-directory '/root/.aws' do
+directory '/root/.certbot' do
   owner 'root'
   group 'root'
   mode '0700'
 end
 
-template '/root/.aws/config' do
+aws_config_file = '/root/.certbot/aws_config_file'
+template aws_config_file do
   source 'aws_config.erb'
   sensitive true
   owner 'root'
@@ -18,7 +22,8 @@ template '/root/.aws/config' do
   mode '600'
   variables(
       aws_access_key_id: node['certbot']['aws_access_key_id'],
-      aws_secret_access_key: node['certbot']['aws_secret_access_key']
+      aws_secret_access_key: node['certbot']['aws_secret_access_key'],
+      aws_region: node['certbot']['aws_region']
   )
 end
 
@@ -35,7 +40,7 @@ end
 raise "You must accept certbot license by setting attribute node['certbot']['accept_license'] to true" unless node['certbot']['accept_license']
 
 execute 'obtain_certificates' do
-  command "#{echo_if_dry_run}certbot certonly --dns-route53 -d chef-server.#{zone_arg} --agree-tos --email #{node['certbot']['ssl_admin_email']} #{dry_run_arg}"
+  command "#{echo_if_dry_run}AWS_CONFIG_FILE=#{aws_config_file} certbot certonly --dns-route53 -d chef-server.#{zone_arg} --agree-tos --email #{node['certbot']['ssl_admin_email']} #{dry_run_arg}"
   not_if { File.directory?('/etc/letsencrypt/live') }
   action :run
 end
@@ -43,5 +48,5 @@ end
 cron 'renew_cert' do
   minute '0'
   hour '0,12'
-  command "python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew #{dry_run_arg}"
+  command "python -c 'import random; import time; time.sleep(random.random() * 3600)' && AWS_CONFIG_FILE=#{aws_config_file} certbot renew #{dry_run_arg}"
 end
