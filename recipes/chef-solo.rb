@@ -38,3 +38,8 @@ execute 'pull_cookbook_dependencies' do
     command "chef exec berks vendor ../"
     cwd "#{cookbooks_dir}/chef-server"
 end
+
+cron 'chef-solo' do
+    minute '*/30'
+    command "chef-solo -j /etc/chef/node.json -c /etc/chef/solo.rb --logfile /var/log/chef-solo.log"
+end
