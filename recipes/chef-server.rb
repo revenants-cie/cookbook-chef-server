@@ -68,13 +68,13 @@ node['chef-server']['admins'].each { |admin|
   end
 
   execute "save_chef_password_#{admin}" do
-      sensitive true
+      sensitive false
       command "/usr/local/bin/update_chef_password #{admin} #{password}"
       action :nothing
   end
 
   execute "save_chef_key_#{admin}" do
-      sensitive true
+      sensitive false
       command "/usr/local/bin/update_chef_user_key #{admin} /home/#{admin}/chef-#{admin}.pem"
       action :nothing
   end
