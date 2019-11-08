@@ -68,7 +68,7 @@ node['chef-server']['admins'].each { |admin|
   end
 
   execute "save_chef_password_#{admin}" do
-      sensitive false
+      sensitive true
       environment(
         'HOME' => '/root',
         'AWS_CONFIG_FILE' => '/root/.aws/config'
@@ -78,7 +78,7 @@ node['chef-server']['admins'].each { |admin|
   end
 
   execute "save_chef_key_#{admin}" do
-      sensitive false
+      sensitive true
       environment(
           'HOME' => '/root',
           'AWS_CONFIG_FILE' => '/root/.aws/config'
@@ -101,3 +101,14 @@ node['chef-server']['admins'].each { |admin|
     action :nothing
   end
 }
+
+template '/etc/opscode/chef-server.rb' do
+    source 'chef-server.erb'
+    owner 'root'
+    group 'root'
+    mode '644'
+    variables(
+        zone: node['certbot']['zones'][0]
+    )
+    notifies :run, 'execute[reconfigure_chef_server]', :delayed
+end
