@@ -69,13 +69,21 @@ node['chef-server']['admins'].each { |admin|
 
   execute "save_chef_password_#{admin}" do
       sensitive false
-      command "/usr/local/bin/update_chef_password #{admin} #{password}"
+      environment(
+        'HOME' => '/root',
+        'AWS_CONFIG_FILE' => '/root/.aws/config'
+      )
+      command "/usr/local/bin/update_chef_password #{admin} #{password} #{node['chef-server']['aws_region']}"
       action :nothing
   end
 
   execute "save_chef_key_#{admin}" do
       sensitive false
-      command "/usr/local/bin/update_chef_user_key #{admin} /home/#{admin}/chef-#{admin}.pem"
+      environment(
+          'HOME' => '/root',
+          'AWS_CONFIG_FILE' => '/root/.aws/config'
+      )
+      command "/usr/local/bin/update_chef_user_key #{admin} /home/#{admin}/chef-#{admin}.pem #{node['chef-server']['aws_region']}"
       action :nothing
   end
 }

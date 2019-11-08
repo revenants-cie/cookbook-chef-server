@@ -15,12 +15,16 @@ from botocore.exceptions import ClientError
 try:
     username = sys.argv[1]
     password = sys.argv[2]
+    region = sys.argv[3]
 except IndexError:
-    print("Usage: %s username password" % sys.argv[0])
+    print("Usage: %s username password aws_region" % sys.argv[0])
     sys.exit(1)
 
 
-client = boto3.client('secretsmanager')
+client = boto3.client(
+    'secretsmanager',
+    region_name=region
+)
 secret_id = "/chef-server/users/{user}/credentials".format(
     user=username
 )
