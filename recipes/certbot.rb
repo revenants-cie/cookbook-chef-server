@@ -48,5 +48,6 @@ end
 cron 'renew_cert' do
   minute '0'
   hour '0,12'
-  command "python -c 'import random; import time; time.sleep(random.random() * 3600)' && AWS_CONFIG_FILE=#{aws_config_file} certbot renew #{dry_run_arg}"
+  command "OUTPUT=$(python -c 'import random; import time; time.sleep(random.random() * 3600)' && AWS_CONFIG_FILE=#{aws_config_file} certbot renew #{dry_run_arg} 2>&1) || echo \"$OUTPUT\""
+  mailto node['chef-server']['cron_mailto']
 end

@@ -41,5 +41,13 @@ end
 
 cron 'chef-solo' do
     minute '*/30'
-    command "chef-solo -j /etc/chef/node.json -c /etc/chef/solo.rb --logfile /var/log/chef-solo.log"
+    command 'OUTPUT=$(chef-solo -j /etc/chef/node.json -c /etc/chef/solo.rb 2>&1 | tee -a /var/log/chef-solo.log) || echo "$OUTPUT"'
+    mailto node['chef-server']['cron_mailto']
+end
+
+logrotate_app 'chef-solo' do
+    path      '/var/log/chef-solo.log'
+    frequency 'weekly'
+    rotate    4
+    options 'nocompress'
 end

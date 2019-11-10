@@ -21,3 +21,4 @@ issues_url 'https://github.com/revenants-cie/cookbook-chef-server/issues'
 source_url 'https://github.com/revenants-cie/cookbook-chef-server'
 
 depends 'poise-python', '~> 1.7.0'
+depends 'logrotate', '~> 2.2.2'

@@ -9,6 +9,7 @@ default['chef-server']['accept_license'] = nil
 default['chef-server']['aws_access_key_id'] = nil
 default['chef-server']['aws_secret_access_key'] = nil
 default['chef-server']['aws_region'] = 'us-east-1'
+default['chef-server']['cron_mailto'] = 'root'
 
 default['postfix']['relayhost'] = '[email-smtp.us-east-1.amazonaws.com]:587'
 default['postfix']['smtp_username'] = nil
@@ -21,5 +22,3 @@ default['certbot']['zones'] = []
 default['certbot']['dry_run'] = false
 default['certbot']['ssl_admin_email'] = nil
 default['certbot']['accept_license'] = nil
-
-# default['poise-python']['options']['pip_version'] = '18.0'

@@ -56,6 +56,12 @@ execute 'create_organization' do
   action :nothing
 end
 
+file "/root/#{node['chef-server']['org_short_name']}-validator.pem" do
+    owner 'root'
+    group 'root'
+    mode '0600'
+end
+
 node['chef-server']['admins'].each { |admin|
   password = SecureRandom.hex
 
@@ -110,5 +116,6 @@ template '/etc/opscode/chef-server.rb' do
     variables(
         zone: node['certbot']['zones'][0]
     )
+    only_if { File.directory?("/etc/letsencrypt/live/chef-server.#{node['certbot']['zones'][0]}/fullchain.pem") }
     notifies :run, 'execute[reconfigure_chef_server]', :delayed
 end
