@@ -9,6 +9,7 @@ default['chef-server']['accept_license'] = nil
 default['chef-server']['aws_access_key_id'] = nil
 default['chef-server']['aws_secret_access_key'] = nil
 default['chef-server']['aws_region'] = 'us-east-1'
+default['chef-server']['backups_bucket'] = nil
 default['chef-server']['cron_mailto'] = 'root'
 
 default['postfix']['relayhost'] = '[email-smtp.us-east-1.amazonaws.com]:587'
@@ -22,3 +23,8 @@ default['certbot']['zones'] = []
 default['certbot']['dry_run'] = false
 default['certbot']['ssl_admin_email'] = nil
 default['certbot']['accept_license'] = nil
+
+default['artifactory']['baseurl'] = 'https://revenants.jfrog.io/revenants/rpm/$releasever/os/$basearch/'
+default['artifactory']['username'] = nil
+default['artifactory']['password'] = nil
+default['artifactory']['gpgcheck'] = false

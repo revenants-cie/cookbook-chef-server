@@ -1,3 +1,5 @@
+raise "You must accept Chef license by setting attribute node['chef-server']['accept_license'] to true" unless node['chef-server']['accept_license']
+
 directory '/root/.aws' do
     owner 'root'
     group 'root'
@@ -28,13 +30,18 @@ end
 package 'chef-server-core' do
   source "#{Chef::Config[:file_cache_path]}/chef-server-core.rpm"
   notifies :run, 'execute[reconfigure_chef_server]', :immediately
-  notifies :run, 'execute[install_chef_manage]', :immediately
-  notifies :run, 'execute[create_organization]', :immediately
+end
+
+execute 'restore_chef_server' do
+    command "/usr/local/bin/restore_chef_server.sh"
+    not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
+    action :run
 end
 
 execute 'install_chef_manage' do
   command 'chef-server-ctl install chef-manage'
-  action :nothing
+  not_if "which chef-manage-ctl"
+  action :run
   notifies :run, 'execute[reconfigure_chef_server]', :immediately
   notifies :run, 'execute[reconfigure_chef_manage]', :immediately
 end
@@ -44,19 +51,21 @@ execute 'reconfigure_chef_server' do
   action :nothing
 end
 
-raise "You must accept Chef license by setting attribute node['chef-server']['accept_license'] to true" unless node['chef-server']['accept_license']
 
 execute 'reconfigure_chef_manage' do
   command 'chef-manage-ctl reconfigure --accept-license'
   action :nothing
 end
 
+directory '/var/opt/chef-backup'
+
 execute 'create_organization' do
-  command "chef-server-ctl org-create \"#{node['chef-server']['org_short_name']}\" \"#{node['chef-server']['org_full_name']}\" --filename \"/root/#{node['chef-server']['org_short_name']}-validator.pem\""
-  action :nothing
+  command "chef-server-ctl org-create \"#{node['chef-server']['org_short_name']}\" \"#{node['chef-server']['org_full_name']}\" --filename \"/var/opt/chef-backup/#{node['chef-server']['org_short_name']}-validator.pem\""
+  not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
+  action :run
 end
 
-file "/root/#{node['chef-server']['org_short_name']}-validator.pem" do
+file "/var/opt/chef-backup/#{node['chef-server']['org_short_name']}-validator.pem" do
     owner 'root'
     group 'root'
     mode '0600'
@@ -68,7 +77,7 @@ node['chef-server']['admins'].each { |admin|
   execute "user_create_#{admin}" do
     sensitive true
     command "chef-server-ctl user-create \"#{admin}\" FIRST_NAME LAST_NAME \"#{admin}@#{node['certbot']['zones'][0]}\" \"#{password}\" --filename \"/home/#{admin}/chef-#{admin}.pem\""
-    action :nothing
+    not_if "chef-server-ctl user-show #{admin}"
     notifies :run, "execute[save_chef_password_#{admin}]", :delayed
     notifies :run, "execute[save_chef_key_#{admin}]", :delayed
   end
@@ -97,14 +106,15 @@ node['chef-server']['admins'].each { |admin|
 node['chef-server']['admins'].each { |admin|
   execute "grant_server_admin_permissions_#{admin}" do
     command "chef-server-ctl grant-server-admin-permissions #{admin}"
-    action :nothing
+    not_if "chef-server-ctl list-server-admins | grep #{admin}"
+    action :run
   end
 }
 
 node['chef-server']['admins'].each { |admin|
   execute "org_user_add_#{admin}" do
     command "chef-server-ctl org-user-add \"#{node['chef-server']['org_short_name']}\" #{admin}"
-    action :nothing
+    action :run
   end
 }
 

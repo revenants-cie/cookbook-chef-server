@@ -1,7 +1,3 @@
-package 'epel-release' do
-  action :upgrade
-end
-
 node['chef-server']['required_packages'].each { |pkg|
   package pkg
 }

@@ -26,6 +26,7 @@ suites:
             admins: ['admin1', 'admin2']
             aws_access_key_id: <%= ENV['CHEF_SERVER_AWS_ACCESS_KEY_ID'] %>
             aws_secret_access_key: <%= ENV['CHEF_SERVER_AWS_SECRET_ACCESS_KEY'] %>
+            backups_bucket: <%= ENV['CHEF_SERVER_BACKUPS_BUCKET'] %>
         postfix:
             smtp_username: <%= ENV['SMTP_USERNAME'] %>
             smtp_password: <%= ENV['SMTP_PASSWORD'] %>
@@ -36,3 +37,6 @@ suites:
             zones: ['foo.com', 'bar.com']
             ssl_admin_email: 'admin@foo.bar'
             dry_run: true
+        artifactory:
+            username: <%= ENV['ARTIFACTORY_USERNAME'] %>
+            password: <%= ENV['ARTIFACTORY_PASSWORD'] %>
