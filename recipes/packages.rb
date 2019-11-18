@@ -14,3 +14,19 @@ node['chef-server']['optional_packages'].each { |pkg|
         group 'root'
     end
 }
+
+remote_file "#{Chef::Config[:file_cache_path]}/chef-server-core.rpm" do
+    source node['chef-server']['pkg-url']
+    checksum node['chef-server']['pkg-sha256sum']
+    action :create_if_missing
+end
+
+execute 'reconfigure_chef_server' do
+    command 'chef-server-ctl reconfigure'
+    action :nothing
+end
+
+package 'chef-server-core' do
+    source "#{Chef::Config[:file_cache_path]}/chef-server-core.rpm"
+    notifies :run, 'execute[reconfigure_chef_server]', :immediately
+end

@@ -21,21 +21,15 @@ template aws_config_file do
 end
 python_package 'awscli'
 
-remote_file "#{Chef::Config[:file_cache_path]}/chef-server-core.rpm" do
-  source node['chef-server']['pkg-url']
-  checksum node['chef-server']['pkg-sha256sum']
-  action :create_if_missing
-end
-
-package 'chef-server-core' do
-  source "#{Chef::Config[:file_cache_path]}/chef-server-core.rpm"
-  notifies :run, 'execute[reconfigure_chef_server]', :immediately
-end
-
 execute 'restore_chef_server' do
-    command "/usr/local/bin/restore_chef_server.sh"
+    command "/usr/local/bin/restore_chef_server"
     not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
     action :run
+end
+
+execute 'reconfigure_chef_manage' do
+  command 'chef-manage-ctl reconfigure --accept-license'
+  action :nothing
 end
 
 execute 'install_chef_manage' do
@@ -46,19 +40,7 @@ execute 'install_chef_manage' do
   notifies :run, 'execute[reconfigure_chef_manage]', :immediately
 end
 
-execute 'reconfigure_chef_server' do
-  command 'chef-server-ctl reconfigure'
-  action :nothing
-end
-
-
-execute 'reconfigure_chef_manage' do
-  command 'chef-manage-ctl reconfigure --accept-license'
-  action :nothing
-end
-
 directory '/var/opt/chef-backup'
-
 execute 'create_organization' do
   command "chef-server-ctl org-create \"#{node['chef-server']['org_short_name']}\" \"#{node['chef-server']['org_full_name']}\" --filename \"/var/opt/chef-backup/#{node['chef-server']['org_short_name']}-validator.pem\""
   not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"

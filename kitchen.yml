@@ -27,6 +27,7 @@ suites:
             aws_access_key_id: <%= ENV['CHEF_SERVER_AWS_ACCESS_KEY_ID'] %>
             aws_secret_access_key: <%= ENV['CHEF_SERVER_AWS_SECRET_ACCESS_KEY'] %>
             backups_bucket: <%= ENV['CHEF_SERVER_BACKUPS_BUCKET'] %>
+            org_short_name: 'revenants'
         postfix:
             smtp_username: <%= ENV['SMTP_USERNAME'] %>
             smtp_password: <%= ENV['SMTP_PASSWORD'] %>
