@@ -36,7 +36,7 @@ template '/etc/twindb/twindb-backup.cfg' do
     )
 end
 
-%w(hourly daily monthly yearly).each { |run_type|
+%w(hourly daily weekly monthly yearly).each { |run_type|
     cron "chef-server-backup_#{run_type}" do
         time run_type.to_sym
         command "/usr/local/bin/chef-server-backup #{run_type}"
