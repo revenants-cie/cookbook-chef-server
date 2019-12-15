@@ -95,7 +95,7 @@ node['chef-server']['admins'].each { |admin|
 
 node['chef-server']['admins'].each { |admin|
   execute "org_user_add_#{admin}" do
-    command "chef-server-ctl org-user-add \"#{node['chef-server']['org_short_name']}\" #{admin}"
+    command "chef-server-ctl org-user-add \"#{node['chef-server']['org_short_name']}\" #{admin} --admin"
     action :run
   end
 }
