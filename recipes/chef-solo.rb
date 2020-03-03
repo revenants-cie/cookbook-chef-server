@@ -47,15 +47,14 @@ cookbook_file chef_solo_wrapper_path do
     group 'root'
 end
 
+cron_environment = {
+    :MAILFROM => node['chef-server']['cron_mailfrom']
+}
 cron 'chef-solo' do
     minute '*/30'
     command chef_solo_wrapper_path
     mailto node['chef-server']['cron_mailto']
-    environment(
-        {
-            :MAILFROM => node['chef-server']['cron_mailfrom']
-        }
-    )
+    environment cron_environment
 end
 
 logrotate_app 'chef-solo' do
