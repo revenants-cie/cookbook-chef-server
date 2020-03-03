@@ -39,10 +39,23 @@ execute 'pull_cookbook_dependencies' do
     cwd "#{cookbooks_dir}/chef-server"
 end
 
+chef_solo_wrapper_path = '/usr/local/bin/chef-solo.py'
+cookbook_file chef_solo_wrapper_path do
+    source 'chef-solo.py'
+    mode '0755'
+    owner 'root'
+    group 'root'
+end
+
 cron 'chef-solo' do
     minute '*/30'
-    command 'OUTPUT=$(chef-solo -j /etc/chef/node.json -c /etc/chef/solo.rb 2>&1 | tee -a /var/log/chef-solo.log) || echo "$OUTPUT"'
+    command chef_solo_wrapper_path
     mailto node['chef-server']['cron_mailto']
+    environment(
+        {
+            :MAILFROM => node['chef-server']['cron_mailfrom']
+        }
+    )
 end
 
 logrotate_app 'chef-solo' do

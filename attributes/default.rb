@@ -11,6 +11,7 @@ default['chef-server']['aws_secret_access_key'] = nil
 default['chef-server']['aws_region'] = 'us-east-1'
 default['chef-server']['backups_bucket'] = nil
 default['chef-server']['cron_mailto'] = 'root'
+default['chef-server']['cron_mailfrom'] = 'root'
 
 default['postfix']['relayhost'] = '[email-smtp.us-east-1.amazonaws.com]:587'
 default['postfix']['smtp_username'] = nil
