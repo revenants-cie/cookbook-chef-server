@@ -8,7 +8,7 @@ file '/etc/cron.d/twindb-backup' do
 end
 
 cookbook_file '/usr/local/bin/chef-server-backup' do
-    source 'chef-server-backup.sh'
+    source 'chef-server-backup.py'
     mode '0755'
     owner 'root'
     group 'root'
