@@ -1,11 +1,4 @@
-package 'epel-release' do
-    action :upgrade
-end
-
-package 'certbot'
-package 'python2-certbot-dns-route53' do
-  options '--setopt=obsoletes=0'
-end
+package 'certbot-wrapper'
 
 directory '/root/.certbot' do
   owner 'root'
@@ -27,27 +20,47 @@ template aws_config_file do
   )
 end
 
-zone_arg = node['certbot']['zones'].join(' -d chef-server.')
+zone_arg = ""
+node['certbot']['zones'].each { |zone|
+    zone_arg << " -d chef-server.#{zone}"
+}
 
 if node['certbot']['dry_run']
     dry_run_arg = '--dry-run'
-    echo_if_dry_run = "echo Would execute if not dry-run: "
 else
     dry_run_arg = ''
-    echo_if_dry_run = ""
 end
 
 raise "You must accept certbot license by setting attribute node['certbot']['accept_license'] to true" unless node['certbot']['accept_license']
 
+execute_environment = {
+    :AWS_CONFIG_FILE => aws_config_file,
+    :PATH => "/opt/certbot-wrapper/bin"
+}
 execute 'obtain_certificates' do
-  command "#{echo_if_dry_run}AWS_CONFIG_FILE=#{aws_config_file} certbot certonly --dns-route53 -d chef-server.#{zone_arg} --agree-tos --email #{node['certbot']['ssl_admin_email']} #{dry_run_arg}"
-  not_if { File.directory?('/etc/letsencrypt/live') }
+  command "certbot-wrapper #{dry_run_arg} certonly #{zone_arg} --email #{node['certbot']['ssl_admin_email']}"
+  environment execute_environment
+  creates '/etc/letsencrypt/live/README'
   action :run
 end
+
+cron_environment = {
+    :MAILFROM => node['chef-server']['cron_mailfrom'],
+    :AWS_CONFIG_FILE =>  aws_config_file,
+    :PATH => "/opt/certbot-wrapper/bin"
+}
 
 cron 'renew_cert' do
   minute '0'
   hour '0,12'
-  command "OUTPUT=$(python -c 'import random; import time; time.sleep(random.random() * 3600)' && AWS_CONFIG_FILE=#{aws_config_file} certbot renew #{dry_run_arg} 2>&1) || echo \"$OUTPUT\""
+  command "certbot-wrapper #{dry_run_arg} renew"
   mailto node['chef-server']['cron_mailto']
+  environment cron_environment
+end
+
+logrotate_app 'certbot' do
+    path      '/var/log/certbot.log'
+    frequency 'weekly'
+    rotate    4
+    options 'nocompress'
 end
