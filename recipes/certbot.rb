@@ -47,7 +47,7 @@ end
 cron_environment = {
     :MAILFROM => node['chef-server']['cron_mailfrom'],
     :AWS_CONFIG_FILE =>  aws_config_file,
-    :PATH => "/opt/certbot-wrapper/bin"
+    :PATH => "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin"
 }
 
 cron 'renew_cert' do
