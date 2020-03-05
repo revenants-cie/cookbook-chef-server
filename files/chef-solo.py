@@ -4,7 +4,10 @@ from subprocess import Popen
 
 import sys
 
+import fcntl
+
 CHEF_SOLO_LOG_FILE = "/var/log/chef-solo.log"
+LOCK_FILE = "/var/run/twindb-backup.lock"
 
 
 def main():
@@ -24,4 +27,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    with open(LOCK_FILE, 'w') as fp:
+        fcntl.flock(fp, fcntl.LOCK_EX)
+        main()
