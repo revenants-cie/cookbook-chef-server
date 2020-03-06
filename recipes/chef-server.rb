@@ -20,6 +20,7 @@ template aws_config_file do
     )
 end
 python_package 'awscli'
+python_package 'boto3'
 
 execute 'restore_chef_server' do
     command "/usr/local/bin/restore_chef_server"
@@ -50,7 +51,7 @@ end
 file "/var/opt/chef-backup/#{node['chef-server']['org_short_name']}-validator.pem" do
     owner 'root'
     group 'root'
-    mode '0600'
+    mode '0640'
 end
 
 node['chef-server']['admins'].each { |admin|
