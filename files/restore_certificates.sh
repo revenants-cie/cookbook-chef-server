@@ -2,7 +2,7 @@
 
 set -eux
 rm -rf /var/tmp/letsencrypt
-backup_copy=$(twindb-backup ls --type files | grep _etc_letsencrypt- | tail -1)
+backup_copy=$(twindb-backup ls --type files | grep _etc_letsencrypt- | sort -t / -k 7 | tail -1)
 
 if ! test -z "$backup_copy"
 then

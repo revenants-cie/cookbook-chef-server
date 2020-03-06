@@ -10,12 +10,14 @@ end
 # but let's keep in chef
 yum_repository 'chef_stable' do
     baseurl 'https://packages.chef.io/repos/yum/stable/el/$releasever/$basearch/'
+    description 'Chef software repository'
     gpgcheck true
     gpgkey 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CHEF'
 end
 
 yum_repository 'artifactory' do
     baseurl node['artifactory']['baseurl']
+    description 'RevDB software repository'
     username node['artifactory']['username']
     password node['artifactory']['password']
     gpgcheck node['artifactory']['gpgcheck']
