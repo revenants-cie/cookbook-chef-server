@@ -29,8 +29,8 @@ node['chef-server']['admins'].each { |usr|
       command "aws secretsmanager get-secret-value "\
         "--region #{node['chef-server']['aws_region']} "\
         "--secret-id /chef-server/users/#{usr}/key "\
-        "| jq -r .SecretString > /home/#{usr}/.chef/#{usr}.pem"
-      creates "/home/#{usr}/.chef/#{usr}.pem"
+        "| jq -r .SecretString > /home/#{usr}/.chef/#{usr}.pem 2> /home/#{usr}/.chef/#{usr}.pem.err"
+      not_if "test -s /home/#{usr}/.chef/#{usr}.pem"
       action :run
   end
 

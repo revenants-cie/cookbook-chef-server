@@ -38,7 +38,7 @@ execute_environment = {
     :PATH => "/opt/certbot-wrapper/bin"
 }
 execute 'obtain_certificates' do
-  command "certbot-wrapper #{dry_run_arg} certonly #{zone_arg} --email #{node['certbot']['ssl_admin_email']}"
+  command "certbot-wrapper #{dry_run_arg} --sleep-delay 0 certonly #{zone_arg} --email #{node['certbot']['ssl_admin_email']}"
   environment execute_environment
   creates '/etc/letsencrypt/live/README'
   action :run
