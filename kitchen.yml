@@ -35,8 +35,8 @@ suites:
             accept_license: true
             aws_access_key_id: <%= ENV['CERTBOT_AWS_ACCESS_KEY_ID'] %>
             aws_secret_access_key: <%= ENV['CERTBOT_AWS_SECRET_ACCESS_KEY'] %>
-            zones: ['foo.com', 'bar.com']
-            ssl_admin_email: 'admin@foo.bar'
+            zones: ['revdb.dev', ]
+            ssl_admin_email: 'admin@revdb.dev'
             dry_run: true
         artifactory:
             username: <%= ENV['ARTIFACTORY_USERNAME'] %>
