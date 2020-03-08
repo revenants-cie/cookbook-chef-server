@@ -40,3 +40,21 @@ node['chef-server']['admins'].each { |usr|
       mode '0640'
   end
 }
+
+node['chef-server']['ssh_public_keys'].each { |item|
+    usr = item[0]
+    directory "/home/#{usr}/.ssh" do
+        owner usr
+        group 0
+        mode '0700'
+        action :create
+    end
+
+    keys = item[1]
+    keys.each { |key|
+        ssh_authorize_key key["email"] do
+            key key["key"]
+            user usr
+        end
+    }
+}

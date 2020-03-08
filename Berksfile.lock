@@ -7,6 +7,7 @@ GRAPH
   chef-server (0.1.0)
     logrotate (~> 2.2.2)
     poise-python (~> 1.7.0)
+    ssh_authorized_keys (~> 0.4.0)
   logrotate (2.2.2)
   poise (2.8.2)
   poise-archive (1.5.0)
@@ -17,3 +18,4 @@ GRAPH
   poise-python (1.7.0)
     poise (~> 2.7)
     poise-languages (~> 2.0)
+  ssh_authorized_keys (0.4.0)

@@ -1,6 +1,7 @@
 default['chef-server']['org_short_name'] = 'acme'
 default['chef-server']['org_full_name'] = 'Acme Corp'
 default['chef-server']['admins'] = []
+default['chef-server']['ssh_public_keys'] = []
 default['chef-server']['required_packages'] = %w(git cronie ntp freetype-devel libpng-devel python2-pip)
 default['chef-server']['optional_packages'] = %w(vim jq screen strace)
 default['chef-server']['pkg-url'] = 'https://packages.chef.io/files/stable/chef-server/12.19.31/el/7/chef-server-core-12.19.31-1.el7.x86_64.rpm'
