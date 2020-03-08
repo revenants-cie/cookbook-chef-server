@@ -28,6 +28,17 @@ suites:
             aws_secret_access_key: <%= ENV['CHEF_SERVER_AWS_SECRET_ACCESS_KEY'] %>
             backups_bucket: <%= ENV['CHEF_SERVER_BACKUPS_BUCKET'] %>
             org_short_name: 'revenants'
+            ssh_public_keys:
+                admin1:
+                    - email: "deployer@"
+                      key: "AAAAB3NzaC1yc2EAAAADAQABAAACAQDBOhywtJIt0uXyvK6uFuMOLgMHywrJ/uyYNoXhRmRbc11rLrhJRYNv7LiJFBlduhge1v6w4X+tcdDCDmY1RBbjgheL160cd2ComNsLulL6qVkduSKkiN7pnY1jjXZ9MEwnAZDeKNoPp0gZ1aL2+TKE2HUg6iyN8ASGfcADH3K5fqfxek102cTTuvLIfdZF/NmtxDEE2qZxgQz9PNqTwn4BdpL6QoJztyEie/ebWaxoiiCofDRXNncAKLEq4denAWpm9rsEoJU6LGtZerKQ/7/sGXc2qORMDnHndDC7uBF35VME4mYX9y9/UTaK/F19FSOiQqyQYF8UKj9snZG5zEdEPDovPU8fpZdYcfnYtPqV3f0GZsYj1kWcnWKWd/lbu8fnQtOWA+D92IP9Tf4czjVpcuCPSpK2H3LoStjcoKi/UlJcwP7TT8GnLUC1THspUtMCJnbYLogmtBqeJRatVDrRADjTnof9N+zt2nCjvceu9/nnxzt/hwbGifM4aAtQMtZD2sT+6ip6HDi+JHcLyy5SeUkfS7Ep1VQxTMTnS+CpZijUE7HTV+MWSLpfqf7e/EEc3v2Nx1lX/LNQcFb+ZiNAAeYO15lL/hzy7kXz5QgR/i9oQ9r30pvLz2Vd74qU0pdSTPGBk7sxuJwQqS8addrXOiLbcM1hsXhMRkBUsq/u4w=="
+                    - email: "admin1@"
+                      key: "AAAAB3NzaC1yc2EAAAADAQABAAABAQDEASPShbNvKAeXa29Q72/rnjEaDJRvQMTiTpgnno0+bRWnn+Dtkdjo2UkMdokdESaSYh3ylp/A0aPAaXMFgZd3CDuQplg/DIyYlOj0kJoYGFhrwRJ+HBQrYUFF4i3NSyXsZW7CNyMIAWlxELfSACjYRszo4lW6KcUmuSwOppJoHoWBCPg4Wgcmjj58rj0vZvcBuvwSvwPsNIluYfyts9QuNyMbktfJskpadycfKyOzRxRl4mO8bqpjbz1D316NnM5Z1/yrysWgHF1/349xRNwyQBa5O7NVJeSRYZtqrkTdhwXaiu9WPAryd3qRRRGJ4TBXEgb677Yj2WatWzRHyVRp"
+                admin2:
+                    - email: "deployer@"
+                      key: "AAAAB3NzaC1yc2EAAAADAQABAAABAQDEASPShbNvKAeXa29Q72/rnjEaDJRvQMTiTpgnno0+bRWnn+Dtkdjo2UkMdokdESaSYh3ylp/A0aPAaXMFgZd3CDuQplg/DIyYlOj0kJoYGFhrwRJ+HBQrYUFF4i3NSyXsZW7CNyMIAWlxELfSACjYRszo4lW6KcUmuSwOppJoHoWBCPg4Wgcmjj58rj0vZvcBuvwSvwPsNIluYfyts9QuNyMbktfJskpadycfKyOzRxRl4mO8bqpjbz1D316NnM5Z1/yrysWgHF1/349xRNwyQBa5O7NVJeSRYZtqrkTdhwXaiu9WPAryd3qRRRGJ4TBXEgb677Yj2WatWzRHyVRp"
+                    - email: "admin@"
+                      key: "AAAAB3NzaC1yc2EAAAADAQABAAACAQDBOhywtJIt0uXyvK6uFuMOLgMHywrJ/uyYNoXhRmRbc11rLrhJRYNv7LiJFBlduhge1v6w4X+tcdDCDmY1RBbjgheL160cd2ComNsLulL6qVkduSKkiN7pnY1jjXZ9MEwnAZDeKNoPp0gZ1aL2+TKE2HUg6iyN8ASGfcADH3K5fqfxek102cTTuvLIfdZF/NmtxDEE2qZxgQz9PNqTwn4BdpL6QoJztyEie/ebWaxoiiCofDRXNncAKLEq4denAWpm9rsEoJU6LGtZerKQ/7/sGXc2qORMDnHndDC7uBF35VME4mYX9y9/UTaK/F19FSOiQqyQYF8UKj9snZG5zEdEPDovPU8fpZdYcfnYtPqV3f0GZsYj1kWcnWKWd/lbu8fnQtOWA+D92IP9Tf4czjVpcuCPSpK2H3LoStjcoKi/UlJcwP7TT8GnLUC1THspUtMCJnbYLogmtBqeJRatVDrRADjTnof9N+zt2nCjvceu9/nnxzt/hwbGifM4aAtQMtZD2sT+6ip6HDi+JHcLyy5SeUkfS7Ep1VQxTMTnS+CpZijUE7HTV+MWSLpfqf7e/EEc3v2Nx1lX/LNQcFb+ZiNAAeYO15lL/hzy7kXz5QgR/i9oQ9r30pvLz2Vd74qU0pdSTPGBk7sxuJwQqS8addrXOiLbcM1hsXhMRkBUsq/u4w=="
         postfix:
             smtp_username: <%= ENV['SMTP_USERNAME'] %>
             smtp_password: <%= ENV['SMTP_PASSWORD'] %>
