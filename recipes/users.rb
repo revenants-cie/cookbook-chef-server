@@ -55,6 +55,7 @@ node['chef-server']['ssh_public_keys'].each { |item|
         ssh_authorize_key key["email"] do
             key key["key"]
             user usr
+            group 0
         end
     }
 }
