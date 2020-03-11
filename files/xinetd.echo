@@ -1,0 +1,10 @@
+service echo
+        {
+                disable         = no
+                type            = INTERNAL
+                id              = echo-stream
+                socket_type     = stream
+                protocol        = tcp
+                user            = root
+                wait            = no
+        }
