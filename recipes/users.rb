@@ -31,6 +31,8 @@ node['chef-server']['admins'].each { |usr|
         "--secret-id /chef-server/users/#{usr}/key 2> /home/#{usr}/.chef/#{usr}.pem.err "\
         "| jq -r .SecretString > /home/#{usr}/.chef/#{usr}.pem "
       not_if "test -s /home/#{usr}/.chef/#{usr}.pem"
+      environment "PATH" => ENV["PATH"] + ":/bin"
+
       action :run
   end
 
