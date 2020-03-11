@@ -31,8 +31,7 @@ node['chef-server']['admins'].each { |usr|
         "--secret-id /chef-server/users/#{usr}/key 2> /home/#{usr}/.chef/#{usr}.pem.err "\
         "| jq -r .SecretString > /home/#{usr}/.chef/#{usr}.pem "
       not_if "test -s /home/#{usr}/.chef/#{usr}.pem"
-      environment "PATH" => ENV["PATH"] + ":/bin"
-
+      environment "AWS_CONFIG_FILE" => '/root/.aws/config'
       action :run
   end
 
