@@ -28,8 +28,8 @@ node['chef-server']['admins'].each { |usr|
   execute 'get_client_key' do
       command "aws secretsmanager get-secret-value "\
         "--region #{node['chef-server']['aws_region']} "\
-        "--secret-id /chef-server/users/#{usr}/key "\
-        "| jq -r .SecretString > /home/#{usr}/.chef/#{usr}.pem 2> /home/#{usr}/.chef/#{usr}.pem.err"
+        "--secret-id /chef-server/users/#{usr}/key 2> /home/#{usr}/.chef/#{usr}.pem.err "\
+        "| jq -r .SecretString > /home/#{usr}/.chef/#{usr}.pem "
       not_if "test -s /home/#{usr}/.chef/#{usr}.pem"
       action :run
   end
