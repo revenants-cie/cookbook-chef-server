@@ -48,7 +48,8 @@ suites:
             aws_secret_access_key: <%= ENV['CERTBOT_AWS_SECRET_ACCESS_KEY'] %>
             zones: ['revdb.dev', ]
             ssl_admin_email: 'admin@revdb.dev'
-            dry_run: true
+            dry_run: false
+            test_cert: true
         artifactory:
             username: <%= ENV['ARTIFACTORY_USERNAME'] %>
             password: <%= ENV['ARTIFACTORY_PASSWORD'] %>

@@ -1,7 +1,7 @@
 raise "You must accept Chef license by setting attribute node['chef-server']['accept_license'] to true" unless node['chef-server']['accept_license']
 
 execute 'restore_chef_server' do
-    command "/usr/local/bin/restore_chef_server"
+    command "/usr/local/bin/restore_chef_server #{node['chef-server']['backups_bucket']}"
     not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
     action :run
 end

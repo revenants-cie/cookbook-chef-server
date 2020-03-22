@@ -8,7 +8,7 @@
 }
 
 execute 'restore_certificates' do
-    command "/usr/local/bin/restore_certificates"
+    command "/usr/local/bin/restore_certificates #{node['chef-server']['backups_bucket']}"
     not_if { File.directory?('/etc/letsencrypt') }
     action :run
 end
