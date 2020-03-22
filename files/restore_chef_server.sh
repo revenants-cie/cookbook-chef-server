@@ -1,6 +1,22 @@
 #!/usr/bin/env bash
 
-set -eux
+set -e
+
+function usage() {
+    echo "Usage: "
+    echo ""
+    echo "$0 BUCKET_NAME"
+    exit 1
+}
+
+! test -z "$1" || usage
+
+set -u
+bucket=$1
+rm -rf /var/tmp/letsencrypt
+
+aws s3 ls s3://"$bucket" || echo "Failed to list bucket $bucket. Skipping restoring Chef server." ; exit 0
+
 tmpdir="$(mktemp -d)"
 
 function cleanup() {

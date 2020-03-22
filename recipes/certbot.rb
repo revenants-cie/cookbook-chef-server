@@ -1,4 +1,6 @@
-package 'certbot-wrapper'
+package 'certbot-wrapper' do
+    action :upgrade
+end
 
 directory '/root/.certbot' do
   owner 'root'
@@ -31,6 +33,12 @@ else
     dry_run_arg = ''
 end
 
+if node['certbot']['test_cert']
+    test_cert_arg = '--test-cert'
+else
+    test_cert_arg = ''
+end
+
 raise "You must accept certbot license by setting attribute node['certbot']['accept_license'] to true" unless node['certbot']['accept_license']
 
 execute_environment = {
@@ -38,7 +46,7 @@ execute_environment = {
     :PATH => "/opt/certbot-wrapper/bin"
 }
 execute 'obtain_certificates' do
-  command "certbot-wrapper #{dry_run_arg} --sleep-delay 0 certonly #{zone_arg} --email #{node['certbot']['ssl_admin_email']}"
+  command "certbot-wrapper #{dry_run_arg} #{test_cert_arg} --sleep-delay 0 certonly #{zone_arg} --email #{node['certbot']['ssl_admin_email']}"
   environment execute_environment
   creates '/etc/letsencrypt/live/README'
   action :run
@@ -53,7 +61,7 @@ cron_environment = {
 cron 'renew_cert' do
   minute '0'
   hour '0,12'
-  command "certbot-wrapper #{dry_run_arg} renew"
+  command "certbot-wrapper #{dry_run_arg} #{test_cert_arg} renew"
   mailto node['chef-server']['cron_mailto']
   environment cron_environment
 end
