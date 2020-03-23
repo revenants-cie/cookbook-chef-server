@@ -7,6 +7,7 @@
 # Chef Software requirements
 # https://docs.chef.io/install_server_pre.html#software-requirements
 
+hostname "chef-server.#{node['certbot']['zones'][0]}"
 include_recipe "chef-server::repos"
 include_recipe "chef-server::packages"
 include_recipe "chef-server::chef-backup"
