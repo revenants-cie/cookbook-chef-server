@@ -87,6 +87,17 @@ template '/etc/opscode/chef-server.rb' do
     variables(
         zone: node['certbot']['zones'][0]
     )
-    only_if { File.exists?("/etc/letsencrypt/live/chef-server.#{node['certbot']['zones'][0]}/fullchain.pem") }
     notifies :run, 'execute[reconfigure_chef_server]', :delayed
+end
+
+directory '/etc/chef-manage'
+template '/etc/chef-manage/manage.erb' do
+    source 'manage.erb'
+    owner 'root'
+    group 'root'
+    mode '644'
+    variables(
+        zone: node['certbot']['zones'][0]
+    )
+    notifies :run, 'execute[reconfigure_chef_manage]', :delayed
 end
