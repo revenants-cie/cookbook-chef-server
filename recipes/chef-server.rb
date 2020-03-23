@@ -91,7 +91,7 @@ template '/etc/opscode/chef-server.rb' do
 end
 
 directory '/etc/chef-manage'
-template '/etc/chef-manage/manage.erb' do
+template '/etc/chef-manage/manage.rb' do
     source 'manage.erb'
     owner 'root'
     group 'root'
