@@ -40,7 +40,9 @@ execute 'pull_cookbook_dependencies' do
 end
 
 cron_environment = {
-    :MAILFROM => node['chef-server']['cron_mailfrom']
+    :MAILFROM => node['chef-server']['cron_mailfrom'],
+    :HOME => '/root',
+    :AWS_CONFIG_FILE => '/root/.aws/config'
 }
 cron 'chef-solo' do
     minute '*/30'
