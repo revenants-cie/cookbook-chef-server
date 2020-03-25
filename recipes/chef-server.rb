@@ -13,6 +13,10 @@ end
 
 execute 'restore_chef_server' do
   command "/opt/certbot-wrapper/bin/chef-server-wrapper restore-chef-server #{node['chef-server']['backups_bucket']}"
+  environment(
+      'HOME' => '/root',
+      'AWS_CONFIG_FILE' => '/root/.aws/config'
+  )
   not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
   action :run
 end
@@ -108,6 +112,8 @@ end
 
 cron_environment = {
     :MAILFROM => node['chef-server']['cron_mailfrom'],
+    :HOME => '/root',
+    :AWS_CONFIG_FILE => '/root/.aws/config'
 }
 
 %w(hourly daily weekly monthly yearly).each { |run_type|
