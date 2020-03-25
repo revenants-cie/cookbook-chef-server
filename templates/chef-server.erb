@@ -1,2 +1,5 @@
+api_fqdn = "chef-server.<%= node['certbot']['zones'][0] %>"
+notification_email = "<%= node['chef-server']['notification_email'] %>"
+
 nginx['ssl_certificate'] = "/etc/letsencrypt/live/chef-server.<%= @zone %>/fullchain.pem"
 nginx['ssl_certificate_key'] = "/etc/letsencrypt/live/chef-server.<%= @zone %>/privkey.pem"

@@ -103,7 +103,6 @@ template '/etc/opscode/chef-server.rb' do
     variables(
         zone: node['certbot']['zones'][0]
     )
-    only_if { File.exists?("/etc/letsencrypt/live/chef-server.#{node['certbot']['zones'][0]}/fullchain.pem") }
     notifies :run, 'execute[reconfigure_chef_server]', :delayed
 end
 
@@ -120,3 +119,15 @@ cron_environment = {
     only_if "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
   end
 }
+
+directory '/etc/chef-manage'
+template '/etc/chef-manage/manage.rb' do
+    source 'manage.erb'
+    owner 'root'
+    group 'root'
+    mode '644'
+    variables(
+        zone: node['certbot']['zones'][0]
+    )
+    notifies :run, 'execute[reconfigure_chef_manage]', :delayed
+end
