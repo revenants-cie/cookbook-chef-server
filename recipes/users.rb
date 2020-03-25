@@ -26,11 +26,10 @@ node['chef-server']['admins'].each { |usr|
   end
 
   execute 'get_client_key' do
-      command "aws secretsmanager get-secret-value "\
-        "--region #{node['chef-server']['aws_region']} "\
-        "--secret-id /chef-server/users/#{usr}/key 2> /home/#{usr}/.chef/#{usr}.pem.err "\
-        "| jq -r .SecretString > /home/#{usr}/.chef/#{usr}.pem "
-      not_if "test -s /home/#{usr}/.chef/#{usr}.pem"
+      command "/opt/certbot-wrapper/bin/aws-wrapper --region #{node['chef-server']['aws_region']} "\
+        " get --secret-id /chef-server/users/#{usr}/key > /home/#{usr}/.chef/#{usr}.pem "\
+        " 2> /home/#{usr}/.chef/#{usr}.pem.err"
+      creates "/home/#{usr}/.chef/#{usr}.pem"
       environment "AWS_CONFIG_FILE" => '/root/.aws/config'
       action :run
   end

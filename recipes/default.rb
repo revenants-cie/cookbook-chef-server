@@ -10,6 +10,7 @@
 hostname "chef-server.#{node['certbot']['zones'][0]}"
 include_recipe "chef-server::repos"
 include_recipe "chef-server::packages"
+include_recipe "chef-server::aws_config"
 include_recipe "chef-server::chef-backup"
 include_recipe "chef-server::chef-restore"
 include_recipe "chef-server::certbot"
