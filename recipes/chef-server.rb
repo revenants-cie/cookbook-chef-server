@@ -1,9 +1,25 @@
 raise "You must accept Chef license by setting attribute node['chef-server']['accept_license'] to true" unless node['chef-server']['accept_license']
 
+remote_file "#{Chef::Config[:file_cache_path]}/chef-server-core.rpm" do
+  source node['chef-server']['pkg-url']
+  checksum node['chef-server']['pkg-sha256sum']
+  action :create_if_missing
+end
+
+package 'chef-server-core' do
+  source "#{Chef::Config[:file_cache_path]}/chef-server-core.rpm"
+  notifies :run, 'execute[reconfigure_chef_server]', :immediately
+end
+
 execute 'restore_chef_server' do
-    command "/usr/local/bin/restore_chef_server #{node['chef-server']['backups_bucket']}"
-    not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
-    action :run
+  command "/opt/certbot-wrapper/bin/chef-server-wrapper restore-chef-server #{node['chef-server']['backups_bucket']}"
+  not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
+  action :run
+end
+
+execute 'reconfigure_chef_server' do
+  command 'chef-server-ctl reconfigure'
+  action :nothing
 end
 
 execute 'reconfigure_chef_manage' do
@@ -49,7 +65,7 @@ node['chef-server']['admins'].each { |admin|
         'HOME' => '/root',
         'AWS_CONFIG_FILE' => '/root/.aws/config'
       )
-      command "/usr/local/bin/update_chef_password #{admin} #{password} #{node['chef-server']['aws_region']}"
+      command "/opt/certbot-wrapper/bin/chef-server-wrapper save-chef-password #{admin} #{password} --region #{node['chef-server']['aws_region']}"
       action :nothing
   end
 
@@ -59,7 +75,7 @@ node['chef-server']['admins'].each { |admin|
           'HOME' => '/root',
           'AWS_CONFIG_FILE' => '/root/.aws/config'
       )
-      command "/usr/local/bin/update_chef_user_key #{admin} /home/#{admin}/chef-#{admin}.pem #{node['chef-server']['aws_region']}"
+      command "/opt/certbot-wrapper/bin/chef-server-wrapper save-chef-user-key --region #{node['chef-server']['aws_region']} #{admin} /home/#{admin}/chef-#{admin}.pem"
       action :nothing
   end
 }
@@ -90,3 +106,17 @@ template '/etc/opscode/chef-server.rb' do
     only_if { File.exists?("/etc/letsencrypt/live/chef-server.#{node['certbot']['zones'][0]}/fullchain.pem") }
     notifies :run, 'execute[reconfigure_chef_server]', :delayed
 end
+
+cron_environment = {
+    :MAILFROM => node['chef-server']['cron_mailfrom'],
+}
+
+%w(hourly daily weekly monthly yearly).each { |run_type|
+  cron "chef-server-backup_#{run_type}" do
+    time run_type.to_sym
+    command "/opt/certbot-wrapper/bin/chef-server-wrapper chef-server-backup #{run_type}"
+    mailto node['chef-server']['cron_mailto']
+    environment cron_environment
+    only_if "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
+  end
+}

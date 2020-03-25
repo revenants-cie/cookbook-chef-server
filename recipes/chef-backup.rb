@@ -7,13 +7,6 @@ file '/etc/cron.d/twindb-backup' do
     action :delete
 end
 
-cookbook_file '/usr/local/bin/chef-server-backup' do
-    source 'chef-server-backup.py'
-    mode '0755'
-    owner 'root'
-    group 'root'
-end
-
 logrotate_app 'chef-server-backup' do
     path      '/var/log/chef-server-backup.log'
     frequency 'weekly'
@@ -35,17 +28,3 @@ template '/etc/twindb/twindb-backup.cfg' do
         bucket: node['chef-server']['backups_bucket']
     )
 end
-
-cron_environment = {
-    :MAILFROM => node['chef-server']['cron_mailfrom'],
-}
-
-%w(hourly daily weekly monthly yearly).each { |run_type|
-    cron "chef-server-backup_#{run_type}" do
-        time run_type.to_sym
-        command "/usr/local/bin/chef-server-backup #{run_type}"
-        mailto node['chef-server']['cron_mailto']
-        environment cron_environment
-        only_if "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
-    end
-}

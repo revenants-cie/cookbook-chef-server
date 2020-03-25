@@ -39,20 +39,12 @@ execute 'pull_cookbook_dependencies' do
     cwd "#{cookbooks_dir}/chef-server"
 end
 
-chef_solo_wrapper_path = '/usr/local/bin/chef-solo.py'
-cookbook_file chef_solo_wrapper_path do
-    source 'chef-solo.py'
-    mode '0755'
-    owner 'root'
-    group 'root'
-end
-
 cron_environment = {
     :MAILFROM => node['chef-server']['cron_mailfrom']
 }
 cron 'chef-solo' do
     minute '*/30'
-    command chef_solo_wrapper_path
+    command "/opt/certbot-wrapper/bin/chef-server-wrapper chef-solo"
     mailto node['chef-server']['cron_mailto']
     environment cron_environment
 end
