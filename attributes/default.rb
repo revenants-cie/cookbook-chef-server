@@ -19,6 +19,7 @@ default['postfix']['relayhost'] = '[email-smtp.us-east-1.amazonaws.com]:587'
 default['postfix']['smtp_username'] = nil
 default['postfix']['smtp_password'] = nil
 
+default['certbot']['role_arn'] = nil
 default['certbot']['aws_access_key_id'] = nil
 default['certbot']['aws_secret_access_key'] = nil
 default['certbot']['aws_region'] = 'us-east-1'
@@ -31,3 +32,8 @@ default['artifactory']['baseurl'] = 'https://revenants.jfrog.io/revenants/rpm/$r
 default['artifactory']['username'] = nil
 default['artifactory']['password'] = nil
 default['artifactory']['gpgcheck'] = false
+
+default['twindb-backup']['aws_access_key_id'] = nil
+default['twindb-backup']['aws_secret_access_key'] = nil
+default['twindb-backup']['aws_region'] = 'us-east-1'
+default['twindb-backup']['backups_bucket'] = nil

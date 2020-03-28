@@ -22,9 +22,9 @@ template '/etc/twindb/twindb-backup.cfg' do
     group 'root'
     mode '600'
     variables(
-        aws_access_key_id: node['chef-server']['aws_access_key_id'],
-        aws_secret_access_key: node['chef-server']['aws_secret_access_key'],
-        aws_default_region: node['chef-server']['aws_region'],
-        bucket: node['chef-server']['backups_bucket']
+        aws_access_key_id: node['twindb-backup']['aws_access_key_id'],
+        aws_secret_access_key: node['twindb-backup']['aws_secret_access_key'],
+        aws_default_region: node['twindb-backup']['aws_region'],
+        bucket: node['twindb-backup']['backups_bucket']
     )
 end

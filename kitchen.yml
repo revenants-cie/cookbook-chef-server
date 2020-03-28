@@ -53,3 +53,7 @@ suites:
         artifactory:
             username: <%= ENV['ARTIFACTORY_USERNAME'] %>
             password: <%= ENV['ARTIFACTORY_PASSWORD'] %>
+        twindb-backup:
+            aws_access_key_id: <%= ENV['CHEF_SERVER_AWS_ACCESS_KEY_ID'] %>
+            aws_secret_access_key: <%= ENV['CHEF_SERVER_AWS_SECRET_ACCESS_KEY'] %>
+            backups_bucket: <%= ENV['CHEF_SERVER_BACKUPS_BUCKET'] %>
