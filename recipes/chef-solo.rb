@@ -42,10 +42,11 @@ end
 cron_environment = {
     :MAILFROM => node['chef-server']['cron_mailfrom'],
     :HOME => '/root',
+    :PATH => "#{ENV['PATH']}:/opt/certbot-wrapper/bin",
 }
 cron 'chef-solo' do
     minute '*/30'
-    command "/opt/certbot-wrapper/bin/chef-server-wrapper chef-solo"
+    command "chef-server-wrapper chef-solo"
     mailto node['chef-server']['cron_mailto']
     environment cron_environment
 end
