@@ -25,12 +25,25 @@ node['chef-server']['admins'].each { |usr|
       )
   end
 
+  environment = {
+      :PATH => "#{ENV['PATH']}:/opt/certbot-wrapper/bin",
+      :HOME => '/root'
+  }
+
+  if node['chef-server']['aws_access_key_id']
+    environment['AWS_ACCESS_KEY_ID'] = node['chef-server']['aws_access_key_id']
+  end
+  if node['chef-server']['aws_secret_access_key']
+    environment['AWS_SECRET_ACCESS_KEY'] = node['chef-server']['aws_secret_access_key']
+    environment['AWS_DEFAULT_REGION'] = node['chef-server']['aws_region']
+  end
+
   execute 'get_client_key' do
-      command "/opt/certbot-wrapper/bin/aws-wrapper --region #{node['chef-server']['aws_region']} "\
+      command "aws-wrapper --region #{node['chef-server']['aws_region']} "\
         " get --secret-id /chef-server/users/#{usr}/key > /home/#{usr}/.chef/#{usr}.pem "\
         " 2> /home/#{usr}/.chef/#{usr}.pem.err"
+      environment environment
       creates "/home/#{usr}/.chef/#{usr}.pem"
-      environment "AWS_CONFIG_FILE" => '/root/.aws/config'
       action :run
   end
 
