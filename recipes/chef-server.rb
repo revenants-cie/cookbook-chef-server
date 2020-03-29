@@ -25,7 +25,7 @@ if node['chef-server']['aws_secret_access_key']
 end
 
 execute 'restore_chef_server' do
-  command "chef-server-wrapper restore-chef-server #{node['chef-server']['backups_bucket']}"
+  command "chef-server-wrapper restore-chef-server #{node['twindb-backup']['backups_bucket']}"
   environment environment
   not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
   action :run
