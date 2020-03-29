@@ -10,7 +10,6 @@ default['chef-server']['accept_license'] = nil
 default['chef-server']['aws_access_key_id'] = nil
 default['chef-server']['aws_secret_access_key'] = nil
 default['chef-server']['aws_region'] = 'us-east-1'
-default['chef-server']['backups_bucket'] = nil
 default['chef-server']['cron_mailto'] = 'root'
 default['chef-server']['cron_mailfrom'] = 'root'
 default['chef-server']['notification_email'] = 'root'

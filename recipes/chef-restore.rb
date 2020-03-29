@@ -12,7 +12,7 @@ if node['chef-server']['aws_secret_access_key']
 end
 
 execute 'restore_certificates' do
-    command "chef-server-wrapper restore-certificates  #{node['chef-server']['backups_bucket']}"
+    command "chef-server-wrapper restore-certificates  #{node['twindb-backup']['backups_bucket']}"
     environment environment
     not_if { File.directory?('/etc/letsencrypt') }
     action :run
