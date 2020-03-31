@@ -3,6 +3,10 @@ node['chef-server']['admins'].each { |usr|
       manage_home true
       gid 0
   end
+  sudo usr do
+    user usr
+    nopasswd true
+  end
 }
 
 node['chef-server']['ssh_public_keys'].each { |item|
