@@ -4,7 +4,7 @@ directory cookbooks_dir
 git 'cookbook-chef-server' do
   repository 'https://github.com/revenants-cie/cookbook-chef-server.git'
   destination "#{cookbooks_dir}/chef-server"
-  revision 'master'
+  revision node['chef-server']['cookbook_revision']
   notifies :run, 'execute[pull_cookbook_dependencies]', :immediately
 end
 

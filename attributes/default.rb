@@ -13,6 +13,7 @@ default['chef-server']['aws_region'] = 'us-east-1'
 default['chef-server']['cron_mailto'] = 'root'
 default['chef-server']['cron_mailfrom'] = 'root'
 default['chef-server']['notification_email'] = 'root'
+default['chef-server']['cookbook_revision'] = 'master'
 
 default['postfix']['relayhost'] = '[email-smtp.us-east-1.amazonaws.com]:587'
 default['postfix']['smtp_username'] = nil
