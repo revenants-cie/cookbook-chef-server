@@ -2,7 +2,7 @@ default['chef-server']['org_short_name'] = 'acme'
 default['chef-server']['org_full_name'] = 'Acme Corp'
 default['chef-server']['admins'] = []
 default['chef-server']['ssh_public_keys'] = []
-default['chef-server']['required_packages'] = %w(git cronie ntp freetype-devel libpng-devel)
+default['chef-server']['required_packages'] = %w(git cronie ntp freetype-devel libpng-devel chef chefdk)
 default['chef-server']['optional_packages'] = %w(vim jq screen strace)
 default['chef-server']['pkg-url'] = 'https://packages.chef.io/files/stable/chef-server/12.19.31/el/7/chef-server-core-12.19.31-1.el7.x86_64.rpm'
 default['chef-server']['pkg-sha256sum'] = '5a49f4e6b62463d1051808795c3ef63f34118286e869a4ef0296fdcddda72868'
@@ -13,6 +13,7 @@ default['chef-server']['aws_region'] = 'us-east-1'
 default['chef-server']['cron_mailto'] = 'root'
 default['chef-server']['cron_mailfrom'] = 'root'
 default['chef-server']['notification_email'] = 'root'
+default['chef-server']['cookbook_revision'] = 'master'
 
 default['postfix']['relayhost'] = '[email-smtp.us-east-1.amazonaws.com]:587'
 default['postfix']['smtp_username'] = nil

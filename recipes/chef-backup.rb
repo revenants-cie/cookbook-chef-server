@@ -11,7 +11,7 @@ logrotate_app 'chef-server-backup' do
     path      '/var/log/chef-server-backup.log'
     frequency 'weekly'
     rotate    4
-    options 'nocompress'
+    options %w(nocompress missingok)
 end
 
 directory '/etc/twindb'
