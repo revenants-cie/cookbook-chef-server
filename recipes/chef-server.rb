@@ -12,8 +12,8 @@ package 'chef-server-core' do
 end
 
 environment = {
-    :PATH => "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin",
-    :HOME => '/root'
+    "PATH" => "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin",
+    "HOME" => '/root'
 }
 
 if node['chef-server']['aws_access_key_id']
@@ -96,9 +96,14 @@ node['chef-server']['admins'].each { |admin|
   end
 }
 
+file '/tmp/chef-solo-knife.rb' do
+  content 'ssl_verify_mode :verify_none'
+end
+
 node['chef-server']['admins'].each { |admin|
   execute "org_user_add_#{admin}" do
     command "chef-server-ctl org-user-add \"#{node['chef-server']['org_short_name']}\" #{admin} --admin"
+    not_if "knife show /groups/admins.json -u pivotal -k /etc/opscode/pivotal.pem -s https://127.0.0.1/organizations/#{node['chef-server']['org_short_name']} --config /tmp/chef-solo-knife.rb | grep -v /groups/admins.json | jq .users | grep #{admin}"
     action :run
   end
 }
@@ -107,7 +112,7 @@ template '/etc/opscode/chef-server.rb' do
     source 'chef-server.erb'
     owner 'root'
     group 'root'
-    mode '644'
+    mode '640'
     variables(
         zone: node['certbot']['zones'][0]
     )
@@ -115,9 +120,7 @@ template '/etc/opscode/chef-server.rb' do
 end
 
 cron_environment = {
-    :MAILFROM => node['chef-server']['cron_mailfrom'],
-    :HOME => '/root',
-    :PATH => "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin",
+    "MAILFROM" => node['chef-server']['cron_mailfrom'],
 }
 if node['chef-server']['aws_access_key_id']
   cron_environment['AWS_ACCESS_KEY_ID'] = node['chef-server']['aws_access_key_id']
@@ -134,6 +137,8 @@ end
     command "chef-server-wrapper chef-server-backup #{run_type}"
     mailto node['chef-server']['cron_mailto']
     environment cron_environment
+    home "/root"
+    path "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin"
     only_if "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
   end
 }

@@ -47,8 +47,7 @@ execute 'obtain_certificates' do
 end
 
 cron_environment = {
-    :MAILFROM => node['chef-server']['cron_mailfrom'],
-    :PATH => "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin"
+    "MAILFROM" => node['chef-server']['cron_mailfrom'],
 }
 if node['certbot']['aws_access_key_id']
   cron_environment['AWS_ACCESS_KEY_ID'] = node['certbot']['aws_access_key_id']
@@ -62,6 +61,7 @@ cron 'renew_cert' do
   minute '0'
   hour '0,12'
   command "certbot-wrapper #{dry_run_arg} #{test_cert_arg} #{role_arn_arg} renew"
+  path "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin"
   mailto node['chef-server']['cron_mailto']
   environment cron_environment
 end
