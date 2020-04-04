@@ -1,5 +1,5 @@
 environment = {
-    :PATH => "#{ENV['PATH']}:/opt/certbot-wrapper/bin",
+    :PATH => "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin",
     :HOME => '/root'
 }
 
@@ -11,9 +11,18 @@ if node['chef-server']['aws_secret_access_key']
   environment['AWS_DEFAULT_REGION'] = node['chef-server']['aws_region']
 end
 
+cert_file = "/etc/letsencrypt/live/chef-server.#{node['certbot']['zones'][0]}/cert.pem"
+
 execute 'restore_certificates' do
     command "chef-server-wrapper restore-certificates  #{node['twindb-backup']['backups_bucket']}"
     environment environment
-    not_if { File.directory?('/etc/letsencrypt') }
+    not_if { File.exists?(cert_file) }
+    notifies :run, 'execute[assert_certificate_symlink]', :immediately
     action :run
+end
+
+execute 'assert_certificate_symlink' do
+  command "test -L #{cert_file}"
+  only_if { File.exists?(cert_file) }
+  action :nothing
 end

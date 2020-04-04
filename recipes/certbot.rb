@@ -28,7 +28,7 @@ end
 raise "You must accept certbot license by setting attribute node['certbot']['accept_license'] to true" unless node['certbot']['accept_license']
 
 environment = {
-    :PATH => "#{ENV['PATH']}:/opt/certbot-wrapper/bin",
+    :PATH => "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin",
     :HOME => '/root'
 }
 if node['certbot']['aws_access_key_id']
