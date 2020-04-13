@@ -11,22 +11,9 @@ package 'chef-server-core' do
   notifies :run, 'execute[reconfigure_chef_server]', :immediately
 end
 
-environment = {
-    "PATH" => "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin",
-    "HOME" => '/root'
-}
-
-if node['chef-server']['aws_access_key_id']
-  environment['AWS_ACCESS_KEY_ID'] = node['chef-server']['aws_access_key_id']
-end
-if node['chef-server']['aws_secret_access_key']
-  environment['AWS_SECRET_ACCESS_KEY'] = node['chef-server']['aws_secret_access_key']
-  environment['AWS_DEFAULT_REGION'] = node['chef-server']['aws_region']
-end
-
 execute 'restore_chef_server' do
   command "chef-server-wrapper restore-chef-server #{node['twindb-backup']['backups_bucket']}"
-  environment environment
+  environment node.run_state['execute_environment']
   not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
   action :run
 end
@@ -75,14 +62,14 @@ node['chef-server']['admins'].each { |admin|
 
   execute "save_chef_password_#{admin}" do
       sensitive true
-      environment environment
+      environment node.run_state['execute_environment']
       command "chef-server-wrapper save-chef-password #{admin} #{password} --region #{node['chef-server']['aws_region']}"
       action :nothing
   end
 
   execute "save_chef_key_#{admin}" do
       sensitive true
-      environment environment
+      environment node.run_state['execute_environment']
       command "chef-server-wrapper save-chef-user-key --region #{node['chef-server']['aws_region']} #{admin} /home/#{admin}/chef-#{admin}.pem"
       action :nothing
   end
@@ -119,24 +106,12 @@ template '/etc/opscode/chef-server.rb' do
     notifies :run, 'execute[reconfigure_chef_server]', :delayed
 end
 
-cron_environment = {
-    "MAILFROM" => node['chef-server']['cron_mailfrom'],
-}
-if node['chef-server']['aws_access_key_id']
-  cron_environment['AWS_ACCESS_KEY_ID'] = node['chef-server']['aws_access_key_id']
-end
-if node['chef-server']['aws_secret_access_key']
-  cron_environment['AWS_SECRET_ACCESS_KEY'] = node['chef-server']['aws_secret_access_key']
-  cron_environment['AWS_DEFAULT_REGION'] = node['chef-server']['aws_region']
-end
-
-
 %w(hourly daily weekly monthly yearly).each { |run_type|
   cron "chef-server-backup_#{run_type}" do
     time run_type.to_sym
     command "chef-server-wrapper chef-server-backup #{run_type}"
     mailto node['chef-server']['cron_mailto']
-    environment cron_environment
+    environment node.run_state['cron_environment']
     home "/root"
     path "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin"
     only_if "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
@@ -179,24 +154,11 @@ node['chef-server']['admins'].each { |usr|
         )
   end
 
-  environment = {
-      :PATH => "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin",
-      :HOME => '/root'
-  }
-
-  if node['chef-server']['aws_access_key_id']
-    environment['AWS_ACCESS_KEY_ID'] = node['chef-server']['aws_access_key_id']
-  end
-  if node['chef-server']['aws_secret_access_key']
-    environment['AWS_SECRET_ACCESS_KEY'] = node['chef-server']['aws_secret_access_key']
-    environment['AWS_DEFAULT_REGION'] = node['chef-server']['aws_region']
-  end
-
   execute 'get_client_key' do
     command "aws-wrapper --region #{node['chef-server']['aws_region']} "\
         " get --secret-id /chef-server/users/#{usr}/key > /home/#{usr}/.chef/#{usr}.pem "\
         " 2> /home/#{usr}/.chef/#{usr}.pem.err"
-    environment environment
+    environment node.run_state['execute_environment']
     creates "/home/#{usr}/.chef/#{usr}.pem"
     action :run
   end

@@ -27,34 +27,11 @@ end
 
 raise "You must accept certbot license by setting attribute node['certbot']['accept_license'] to true" unless node['certbot']['accept_license']
 
-environment = {
-    :PATH => "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin",
-    :HOME => '/root'
-}
-if node['certbot']['aws_access_key_id']
-  environment['AWS_ACCESS_KEY_ID'] = node['certbot']['aws_access_key_id']
-end
-if node['certbot']['aws_secret_access_key']
-  environment['AWS_SECRET_ACCESS_KEY'] = node['certbot']['aws_secret_access_key']
-  environment['AWS_DEFAULT_REGION'] = node['certbot']['aws_region']
-end
-
 execute 'obtain_certificates' do
   command "certbot-wrapper #{dry_run_arg} #{test_cert_arg} --sleep-delay 0 #{role_arn_arg} certonly #{zone_arg} --email #{node['certbot']['ssl_admin_email']}"
-  environment environment
+  environment node.run_state['execute_environment']
   creates '/etc/letsencrypt/live/README'
   action :run
-end
-
-cron_environment = {
-    "MAILFROM" => node['chef-server']['cron_mailfrom'],
-}
-if node['certbot']['aws_access_key_id']
-  cron_environment['AWS_ACCESS_KEY_ID'] = node['certbot']['aws_access_key_id']
-end
-if node['certbot']['aws_secret_access_key']
-  cron_environment['AWS_SECRET_ACCESS_KEY'] = node['certbot']['aws_secret_access_key']
-  cron_environment['AWS_DEFAULT_REGION'] = node['certbot']['aws_region']
 end
 
 cron 'renew_cert' do
@@ -63,7 +40,7 @@ cron 'renew_cert' do
   command "certbot-wrapper #{dry_run_arg} #{test_cert_arg} #{role_arn_arg} renew"
   path "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/opt/certbot-wrapper/bin"
   mailto node['chef-server']['cron_mailto']
-  environment cron_environment
+  environment node.run_state['cron_environment']
 end
 
 logrotate_app 'certbot' do

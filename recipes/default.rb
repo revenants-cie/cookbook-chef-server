@@ -8,6 +8,7 @@
 # https://docs.chef.io/install_server_pre.html#software-requirements
 
 hostname "chef-server.#{node['certbot']['zones'][0]}"
+include_recipe "chef-server::environment"
 include_recipe "chef-server::repos"
 include_recipe "chef-server::packages"
 include_recipe "chef-server::chef-license"
@@ -20,4 +21,5 @@ include_recipe "chef-server::users"
 include_recipe "chef-server::chef-server"
 include_recipe "chef-server::mail-relay"
 include_recipe "chef-server::chef-solo"
+include_recipe "chef-server::chef-cleanup"
 include_recipe "chef-server::healthcheck"
