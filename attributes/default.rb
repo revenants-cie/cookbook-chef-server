@@ -37,3 +37,23 @@ default['twindb-backup']['aws_access_key_id'] = nil
 default['twindb-backup']['aws_secret_access_key'] = nil
 default['twindb-backup']['aws_region'] = 'us-east-1'
 default['twindb-backup']['backups_bucket'] = nil
+
+
+default['datadog_app_key_secret_id'] = 'datadog_app_key'
+default['datadog_api_key_secret_id'] = 'datadog_api_key'
+default['datadog_aws_integration_external_id_secret_id'] = 'datadog_aws_integration_external_id'
+
+default['datadog']['enable_process_agent'] = true
+default['datadog']['extra_config']['process_config']['strip_proc_arguments'] = 'true'
+
+default['datadog']['tags'] = [
+  'env:' + node.chef_environment,
+  'dc:' + node['ec2']['region'],
+  'az:' + node['ec2']['availability_zone'],
+  'ami:' + node['ec2']['ami_id'],
+  'instance_id:' + node['ec2']['instance_id'],
+  'instance_type:' + node['ec2']['instance_type'],
+  'acc:' + node['ec2']['account_id'],
+  'fqdn:' + node['fqdn'],
+  'company_code:' + node['revdb']['company_code']
+]
