@@ -15,6 +15,7 @@ execute 'restore_chef_server' do
   command "chef-server-wrapper restore-chef-server #{node['twindb-backup']['backups_bucket']}"
   environment node.run_state['execute_environment']
   not_if  "chef-server-ctl org-show #{node['chef-server']['org_short_name']}"
+  timeout 7200
   action :run
 end
 
