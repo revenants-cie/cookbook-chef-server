@@ -22,3 +22,4 @@ source_url 'https://github.com/revenants-cie/cookbook-chef-server'
 
 depends 'logrotate', '~> 2.2.2'
 depends 'ssh_authorized_keys', '~> 0.4.0'
+depends 'datadog', '~> 4.2.1'
