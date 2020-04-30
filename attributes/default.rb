@@ -38,6 +38,7 @@ default['twindb-backup']['aws_secret_access_key'] = nil
 default['twindb-backup']['aws_region'] = 'us-east-1'
 default['twindb-backup']['backups_bucket'] = nil
 
+default['revdb']['company_code'] = nil
 
 default['datadog_app_key_secret_id'] = 'datadog_app_key'
 default['datadog_api_key_secret_id'] = 'datadog_api_key'
