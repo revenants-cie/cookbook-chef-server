@@ -28,17 +28,14 @@ default['certbot']['dry_run'] = false
 default['certbot']['ssl_admin_email'] = nil
 default['certbot']['accept_license'] = nil
 
-default['artifactory']['baseurl'] = 'https://revenants.jfrog.io/revenants/rpm/$releasever/os/$basearch/'
-default['artifactory']['username'] = nil
-default['artifactory']['password'] = nil
-default['artifactory']['gpgcheck'] = false
+default['artifactory']['secret_id'] = '/artifactory/repo_user'
 
 default['twindb-backup']['aws_access_key_id'] = nil
 default['twindb-backup']['aws_secret_access_key'] = nil
 default['twindb-backup']['aws_region'] = 'us-east-1'
 default['twindb-backup']['backups_bucket'] = nil
 
-default['revdb']['company_code'] = nil
+default['revdb']['company_code'] = ''
 
 default['datadog_app_key_secret_id'] = 'datadog_app_key'
 default['datadog_api_key_secret_id'] = 'datadog_api_key'

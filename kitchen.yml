@@ -1,6 +1,12 @@
 ---
 driver:
-  name: vagrant
+    name: ec2
+    iam_profile_name: kitchen-test
+    block_device_mappings:
+        - device_name: /dev/sda1
+          ebs:
+              volume_size: 16
+              delete_on_termination: true
 
 provisioner:
   name: chef_zero
@@ -50,10 +56,9 @@ suites:
             ssl_admin_email: 'admin@revdb.dev'
             dry_run: false
             test_cert: true
-        artifactory:
-            username: <%= ENV['ARTIFACTORY_USERNAME'] %>
-            password: <%= ENV['ARTIFACTORY_PASSWORD'] %>
         twindb-backup:
             aws_access_key_id: <%= ENV['CHEF_SERVER_AWS_ACCESS_KEY_ID'] %>
             aws_secret_access_key: <%= ENV['CHEF_SERVER_AWS_SECRET_ACCESS_KEY'] %>
             backups_bucket: <%= ENV['CHEF_SERVER_BACKUPS_BUCKET'] %>
+        revdb:
+            company_code: "fra"

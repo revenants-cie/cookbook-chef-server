@@ -4,8 +4,16 @@ DEPENDENCIES
     metadata: true
 
 GRAPH
+  apt (7.2.0)
   chef-server (0.1.0)
+    datadog (~> 4.2.1)
     logrotate (~> 2.2.2)
     ssh_authorized_keys (~> 0.4.0)
+  chef_handler (3.0.3)
+  datadog (4.2.1)
+    apt (>= 0.0.0)
+    chef_handler (>= 1.2)
+    yum (>= 3.0)
   logrotate (2.2.2)
   ssh_authorized_keys (0.4.0)
+  yum (5.1.0)

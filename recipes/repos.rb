@@ -15,14 +15,13 @@ yum_repository 'chef_stable' do
     gpgkey 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CHEF'
 end
 
-yum_repository 'artifactory' do
-    baseurl node['artifactory']['baseurl']
-    description 'RevDB software repository'
-    username node['artifactory']['username']
-    password node['artifactory']['password']
-    gpgcheck node['artifactory']['gpgcheck']
-    mode '0600'
-    sensitive true
+yum_repository 'revdb_artifactory' do
+  baseurl     'https://revenants.jfrog.io/artifactory/rpm-local/$releasever/os/$basearch/'
+  description 'RevDB repository'
+  gpgcheck    false
+  username(lazy { node.run_state['artifactory_user'] })
+  password(lazy { node.run_state['artifactory_api_key'] })
+  mode '0640'
 end
 
 package 'epel-release' do
