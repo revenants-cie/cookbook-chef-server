@@ -39,6 +39,8 @@ default['revdb']['company_code'] = ''
 
 default['datadog_app_key_secret_id'] = 'datadog_app_key'
 default['datadog_api_key_secret_id'] = 'datadog_api_key'
+default['datadog']['api_key'] = 'from defaults'
+default['datadog']['application_key'] = 'from defaults'
 default['datadog_aws_integration_external_id_secret_id'] = 'datadog_aws_integration_external_id'
 
 default['datadog']['enable_process_agent'] = true

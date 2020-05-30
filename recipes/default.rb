@@ -26,3 +26,4 @@ include_recipe "chef-server::chef-solo"
 include_recipe "chef-server::chef-cleanup"
 include_recipe "chef-server::healthcheck"
 include_recipe 'chef-server::datadog'
+include_recipe 'datadog::dd-handler'

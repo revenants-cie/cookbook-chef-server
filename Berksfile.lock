@@ -4,7 +4,7 @@ DEPENDENCIES
     metadata: true
 
 GRAPH
-  apt (7.2.0)
+  apt (7.3.0)
   chef-server (0.1.0)
     datadog (~> 4.2.1)
     logrotate (~> 2.2.2)

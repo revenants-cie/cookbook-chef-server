@@ -1,6 +1,7 @@
 ---
 driver:
     name: ec2
+    instance_type: t2.large
     iam_profile_name: kitchen-test
     block_device_mappings:
         - device_name: /dev/sda1
@@ -62,3 +63,5 @@ suites:
             backups_bucket: <%= ENV['CHEF_SERVER_BACKUPS_BUCKET'] %>
         revdb:
             company_code: "fra"
+        datadog_api_key_secret_id: "datadog_api_key"
+        datadog_app_key_secret_id: "datadog_app_key"
