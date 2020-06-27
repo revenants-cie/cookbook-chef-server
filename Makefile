@@ -36,3 +36,26 @@ lint: ## Run code style checks
 .PHONY: test
 test: ## Run Kitchen test on supported platforms
 	kitchen test
+
+.PHONY: bootstrap
+bootstrap: ## bootstrap the development environment
+	pip install -U "pip ~= 20.1"
+	pip install -U "setuptools ~= 47.2"
+	pip install -r requirements_dev.txt
+
+define BROWSER_PYSCRIPT
+import os, webbrowser, sys
+
+from urllib.request import pathname2url
+
+webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
+endef
+export BROWSER_PYSCRIPT
+
+BROWSER := python -c "$$BROWSER_PYSCRIPT"
+
+.PHONY: docs
+docs: ## generate Sphinx HTML documentation, including API docs
+	$(MAKE) -C docs clean
+	$(MAKE) -C docs html
+	$(BROWSER) docs/_build/html/index.html
