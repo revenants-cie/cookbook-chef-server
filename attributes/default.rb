@@ -28,8 +28,6 @@ default['certbot']['dry_run'] = false
 default['certbot']['ssl_admin_email'] = nil
 default['certbot']['accept_license'] = nil
 
-default['artifactory']['secret_id'] = '/artifactory/repo_user'
-
 default['twindb-backup']['aws_access_key_id'] = nil
 default['twindb-backup']['aws_secret_access_key'] = nil
 default['twindb-backup']['aws_region'] = 'us-east-1'

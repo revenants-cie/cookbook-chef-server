@@ -38,11 +38,3 @@ end
 
 node.default['datadog']['hostname'] = node.run_state['hostname']
 
-include_recipe 'datadog::dd-agent'
-
-cookbook_file '/etc/datadog-agent/conf.d/process.d/conf.yaml' do
-  source 'process.d_conf.yaml'
-  mode '0755'
-  owner 'dd-agent'
-  notifies :restart, 'service[datadog-agent]', :delayed
-end

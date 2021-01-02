@@ -19,8 +19,6 @@ yum_repository 'revdb_artifactory' do
   baseurl     'https://revenants.jfrog.io/artifactory/rpm-local/$releasever/os/$basearch/'
   description 'RevDB repository'
   gpgcheck    false
-  username lazy { node.run_state['artifactory_user'] }
-  password lazy { node.run_state['artifactory_api_key'] }
   mode '0640'
 end
 
